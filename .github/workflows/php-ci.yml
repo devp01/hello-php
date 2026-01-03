@@ -1,14 +1,30 @@
-stages:
-  - test
+name: PHP CI
 
-run-tests:
-  stage: test
-  image: php:8.3 # Use a recent PHP image
-  before_script:
-    # Install Composer dependencies
-    - curl -sS getcomposer.org | php
-    - php composer.phar install
-  script:
-    # Run the PHPUnit tests
-    - vendor/bin/phpunit tests/CalculatorTest.php
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+
+      - name: Install Composer
+        run: |
+          curl -sS https://getcomposer.org/installer | php
+          php composer.phar install
+
+      - name: Run PHPUnit tests
+        run: |
+          vendor/bin/phpunit tests/CalculatorTest.php
 
