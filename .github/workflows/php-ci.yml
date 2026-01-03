@@ -1,27 +1,14 @@
-name: PHP CI
+stages:
+  - test
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-jobs:
-  php-lint:
-    name: PHP Syntax Check
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: "8.2"
-
-      - name: Lint PHP
-        run: |
-          echo "Running PHP lint..."
-          find . -name "*.php" -print0 | xargs -0 -n1 php -l
+run-tests:
+  stage: test
+  image: php:8.3 # Use a recent PHP image
+  before_script:
+    # Install Composer dependencies
+    - curl -sS getcomposer.org | php
+    - php composer.phar install
+  script:
+    # Run the PHPUnit tests
+    - vendor/bin/phpunit tests/CalculatorTest.php
 
