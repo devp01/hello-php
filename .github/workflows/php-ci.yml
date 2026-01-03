@@ -26,5 +26,5 @@ jobs:
 
       - name: Run PHPUnit tests
         run: |
-          vendor/bin/phpunit tests/CalculatorTest.php
+          vendor/bin/phpunit cal.php
 
